@@ -10,26 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace OptimizationMethods
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для PlotResult.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PlotResult : Window
     {
-        float error;
-        public string Error { get { return error.ToString(); } }
-        public MainWindow()
+        public PlotResult()
         {
             InitializeComponent();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }
