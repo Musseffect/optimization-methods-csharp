@@ -303,21 +303,22 @@ namespace OptimizationMethods.Compiler
             }
         }
         delegate Operand FunctionExec(List<Operand> args);
-        enum StackElementType
+        public enum StackElementType
         {
-            Operand,
-            Variable,
-            Addition,
-            Subtraction,
-            Multiplication,
-            Division,
-            Power,
-            Negation,
-            Function
+            Operand=0,
+            Variable=14,
+            Addition=1,
+            Subtraction=3,
+            Multiplication=5,
+            Division=7,
+            Power=9,
+            Negation=11,
+            Function=12
         }
-        abstract class StackElement
+        public abstract class StackElement
         {
             protected StackElementType type;
+            public StackElementType Type { get { return type; } }
             public StackElement(StackElementType type)
             {
                 this.type = type;
@@ -408,32 +409,56 @@ namespace OptimizationMethods.Compiler
             {
                 this.func = func;
             }
-            public void exec(Stack<Operand> operands)
+            public void exec(Queue<Operand> operands)
             {
                 List<Operand> arguments = new List<Operand>();
                 for (int i = 0; i < func.ArgNumber; i++)
                 {
-                    arguments.Add(operands.Pop());
+                    arguments.Add(operands.Dequeue());
                 }
-                operands.Push(func.Exec(arguments));
+                operands.Enqueue(func.Exec(arguments));
             }
         }
         public class ExpressionStack
         {
-            List<StackElement> elements;
+            List<StackElement> rpn;
             float[] variables;
             Dictionary<string, int> varIndicies;
+            public ExpressionStack(List<StackElement> rpn, Dictionary<string, int>  varIndicies)
+            {
+                this.rpn = rpn;
+                this.variables = new float[varIndicies.Count];
+                this.varIndicies = varIndicies;
+            }
             public void set(string var, float value)
             {
                 variables[varIndicies[var]] = value;
             }
-            public float execute()
+            public double execute()
             {
-                Stack<Operand> operands;
-                throw new NotImplementedException();
+                Queue<Operand> operands=new Queue<Operand>();
+                for (int i = 0; i < rpn.Count; i++)
+                {
+                    if (rpn[i].Type == StackElementType.Negation)
+                    {
+                        operands.Enqueue(((NegationOperator)rpn[i]).exec(operands.Dequeue()));
+                    }
+                    if ((rpn[i].Type & StackElementType.Addition) == StackElementType.Addition)
+                    {
+                        operands.Enqueue(((BinaryOperator)rpn[i]).exec(operands.Dequeue(), operands.Dequeue()));
+                    }
+                    else if (rpn[i].Type == StackElementType.Function)
+                    {
+                        ((Function)rpn[i]).exec(operands);
+                    }
+                    else {
+                        operands.Enqueue((Operand)rpn[i]);
+                    }
+                }
+                return operands.Dequeue().value;
             }
         }
-        class CompiledExpression
+        /*class CompiledExpression
         {
             ExpressionStack expression;
             ExpressionStack derivatives;
@@ -441,6 +466,6 @@ namespace OptimizationMethods.Compiler
             {
                 throw new NotImplementedException();
             }
-        }
+        }*/
     }
 }
