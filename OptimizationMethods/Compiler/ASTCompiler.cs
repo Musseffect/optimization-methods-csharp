@@ -58,6 +58,8 @@ namespace OptimizationMethods.Compiler
         }
         static void compileIdentifier(SimpleIdentifierNode node)
         {
+            if(variables.ContainsKey())
+            variables.Contains
             rpn.Push(new Variable());
         }
         static void compileConstant(SimpleFloatNode node)
@@ -99,9 +101,12 @@ namespace OptimizationMethods.Compiler
             return;
         }
         static Stack<StackElement> rpn;
-        static HashSet<string> variables;
+        static Dictionary<string,int> indicies;
+        static int varCount;
         public static CompiledExpression compileAST(ASTNode root)
         {
+            varCount = 0;
+            indicies = new Dictionary<string, int>();
             rpn = new Stack<StackElement>();
             throw new NotImplementedException();
             try
