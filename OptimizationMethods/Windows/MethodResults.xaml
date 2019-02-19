@@ -1,0 +1,19 @@
+﻿<Window x:Class="OptimizationMethods.Windows.MethodResults"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OptimizationMethods.Windows"
+        mc:Ignorable="d"
+        Title="Результаты" Height="384" Width="507.5">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Margin="5" Grid.Row="0" Header="Приближения">
+                <DataGrid x:Name="grid" Margin="10" ColumnHeaderHeight="30" IsReadOnly="True"/>
+        </GroupBox>
+        <TextBlock Grid.Row="1" x:Name="OutputTextBlock" Margin="5"/>
+    </Grid>
+</Window>

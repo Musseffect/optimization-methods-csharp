@@ -6,37 +6,38 @@ using System.Threading.Tasks;
 
 namespace OptimizationMethods.Compiler
 {
-    partial class ASTCompiler
+    public partial class ASTCompiler
     {
-        delegate ASTSimpleNode FunctionDerivative(List<ASTSimpleNode> node);
-        class FunctionEntry
+        public delegate ASTSimpleNode FunctionDerivative(List<ASTSimpleNode> node);
+        public class FunctionEntry
         {
+            public string FuncName { get; set; }
             public FunctionExec Exec { get; set; }
             public List<FunctionDerivative> Der { get; set; }
             public int ArgNumber { get; set; }
         }
-        class MetaData
+        public class MetaData
         {
-            static void Init()
+            static public void Init()
             {
                 functionTable = new Dictionary<string, FunctionEntry>()
             {
-                { "sin", new FunctionEntry{ Exec=Sin,Der=new List<FunctionDerivative>{SinDer},ArgNumber=1}},
-                { "cos", new FunctionEntry{ Exec=Cos,Der=new List<FunctionDerivative>{CosDer },ArgNumber=1}},
-                { "tan", new FunctionEntry{ Exec=Tan,Der=new List<FunctionDerivative>{TanDer},ArgNumber=1}},
-                { "ctg", new FunctionEntry{ Exec=Ctg,Der=new List<FunctionDerivative>{CtgDer },ArgNumber=1}},
-                { "atan", new FunctionEntry{ Exec=Atan,Der=new List<FunctionDerivative>{AtanDer},ArgNumber=1}},
-                { "actg", new FunctionEntry{ Exec=Actg,Der=new List<FunctionDerivative>{ActgDer},ArgNumber=1}},
-                { "asin", new FunctionEntry{ Exec=Asin,Der=new List<FunctionDerivative>{AsinDer},ArgNumber=1}},
-                { "acos", new FunctionEntry{ Exec=Acos,Der=new List<FunctionDerivative>{AcosDer},ArgNumber=1}},
-                { "exp", new FunctionEntry{ Exec=Exp,Der=new List<FunctionDerivative>{ExpDer },ArgNumber=1}},
-                { "pi", new FunctionEntry{ Exec=Pi,Der=null,ArgNumber=0}},
-                { "e", new FunctionEntry{ Exec=E,Der=null,ArgNumber=0}},
-                { "ln", new FunctionEntry{ Exec=Ln,Der=new List<FunctionDerivative>{LnDer },ArgNumber=1}},
-                { "log", new FunctionEntry{ Exec=Log,Der=new List<FunctionDerivative>{LogDer1,LogDer2 },ArgNumber=2}},
-                { "sqrt", new FunctionEntry{ Exec=Sqrt,Der=new List<FunctionDerivative>{SqrtDer },ArgNumber=1}},
-                { "sqr", new FunctionEntry{ Exec=Sqr,Der=new List<FunctionDerivative>{SqrDer },ArgNumber=1}},
-                { "pow", new FunctionEntry{ Exec=Pow,Der=new List<FunctionDerivative>{ PowDer1,PowDer2},ArgNumber=2}}
+                { "sin", new FunctionEntry{ FuncName="sin",Exec=Sin,Der=new List<FunctionDerivative>{SinDer},ArgNumber=1}},
+                { "cos", new FunctionEntry{ FuncName="cos",Exec=Cos,Der=new List<FunctionDerivative>{CosDer },ArgNumber=1}},
+                { "tan", new FunctionEntry{ FuncName="tan",Exec=Tan,Der=new List<FunctionDerivative>{TanDer},ArgNumber=1}},
+                { "ctg", new FunctionEntry{ FuncName="ctg",Exec=Ctg,Der=new List<FunctionDerivative>{CtgDer },ArgNumber=1}},
+                { "atan", new FunctionEntry{ FuncName="atan",Exec=Atan,Der=new List<FunctionDerivative>{AtanDer},ArgNumber=1}},
+                { "actg", new FunctionEntry{ FuncName="actg",Exec=Actg,Der=new List<FunctionDerivative>{ActgDer},ArgNumber=1}},
+                { "asin", new FunctionEntry{ FuncName="asin",Exec=Asin,Der=new List<FunctionDerivative>{AsinDer},ArgNumber=1}},
+                { "acos", new FunctionEntry{ FuncName="acos",Exec=Acos,Der=new List<FunctionDerivative>{AcosDer},ArgNumber=1}},
+                { "exp", new FunctionEntry{ FuncName="exp",Exec=Exp,Der=new List<FunctionDerivative>{ExpDer },ArgNumber=1}},
+                { "pi", new FunctionEntry{ FuncName="pi",Exec=Pi,Der=null,ArgNumber=0}},
+                { "e", new FunctionEntry{ FuncName="e",Exec=E,Der=null,ArgNumber=0}},
+                { "ln", new FunctionEntry{ FuncName="ln",Exec=Ln,Der=new List<FunctionDerivative>{LnDer },ArgNumber=1}},
+                { "log", new FunctionEntry{ FuncName="log",Exec=Log,Der=new List<FunctionDerivative>{LogDer1,LogDer2 },ArgNumber=2}},
+                { "sqrt", new FunctionEntry{ FuncName="sqrt",Exec=Sqrt,Der=new List<FunctionDerivative>{SqrtDer },ArgNumber=1}},
+                { "sqr", new FunctionEntry{ FuncName="sqr",Exec=Sqr,Der=new List<FunctionDerivative>{SqrDer },ArgNumber=1}},
+                { "pow", new FunctionEntry{ FuncName="pow",Exec=Pow,Der=new List<FunctionDerivative>{ PowDer1,PowDer2},ArgNumber=2}}
             };
             }
             static Dictionary<string, FunctionEntry> functionTable;
@@ -302,7 +303,7 @@ namespace OptimizationMethods.Compiler
                 };
             }
         }
-        delegate Operand FunctionExec(List<Operand> args);
+        public delegate Operand FunctionExec(List<Operand> args);
         public enum StackElementType
         {
             Operand=0,
@@ -324,7 +325,7 @@ namespace OptimizationMethods.Compiler
                 this.type = type;
             }
         }
-        class Operand : StackElement
+        public class Operand : StackElement
         {
             public double value;
             public Operand(double value) : base(StackElementType.Operand)
@@ -355,7 +356,7 @@ namespace OptimizationMethods.Compiler
             public AdditionOperator() : base(StackElementType.Addition) { }
             public override Operand exec(Operand op1, Operand op2)
             {
-                throw new NotImplementedException();
+                return new Operand(op2.value + op1.value);
             }
         }
         class SubtractionOperator : BinaryOperator
@@ -363,7 +364,7 @@ namespace OptimizationMethods.Compiler
             public SubtractionOperator() : base(StackElementType.Subtraction) { }
             public override Operand exec(Operand op1, Operand op2)
             {
-                throw new NotImplementedException();
+                return new Operand(op2.value-op1.value);
             }
         }
         class PowerOperator : BinaryOperator
@@ -371,7 +372,7 @@ namespace OptimizationMethods.Compiler
             public PowerOperator() : base(StackElementType.Power) { }
             public override Operand exec(Operand op1, Operand op2)
             {
-                throw new NotImplementedException();
+                return new Operand(Math.Pow(op2.value,op1.value));
             }
 
         }
@@ -380,7 +381,7 @@ namespace OptimizationMethods.Compiler
             public DivisionOperator() : base(StackElementType.Division) { }
             public override Operand exec(Operand op1, Operand op2)
             {
-                throw new NotImplementedException();
+                return new Operand(op2.value/op1.value);
             }
 
         }
@@ -389,7 +390,7 @@ namespace OptimizationMethods.Compiler
             public MultiplicationOperator() : base(StackElementType.Multiplication) { }
             public override Operand exec(Operand op1, Operand op2)
             {
-                throw new NotImplementedException();
+                return new Operand(op2.value * op1.value);
             }
 
         }
@@ -409,53 +410,71 @@ namespace OptimizationMethods.Compiler
             {
                 this.func = func;
             }
-            public void exec(Queue<Operand> operands)
+            public void exec(Stack<Operand> operands)
             {
-                List<Operand> arguments = new List<Operand>();
+                Stack<Operand> arguments = new Stack<Operand>();
                 for (int i = 0; i < func.ArgNumber; i++)
                 {
-                    arguments.Add(operands.Dequeue());
+                    arguments.Push(operands.Pop());
                 }
-                operands.Enqueue(func.Exec(arguments));
+                List<Operand> list=arguments.ToList<Operand>();
+                operands.Push(func.Exec(list));
             }
         }
         public class ExpressionStack
         {
             List<StackElement> rpn;
-            float[] variables;
+            double[] variables;
             Dictionary<string, int> varIndicies;
             public ExpressionStack(List<StackElement> rpn, Dictionary<string, int>  varIndicies)
             {
                 this.rpn = rpn;
-                this.variables = new float[varIndicies.Count];
+                this.variables = new double[varIndicies.Count];
                 this.varIndicies = varIndicies;
             }
-            public void set(string var, float value)
+            public string[] getVariableNames()
+            {
+                return varIndicies.Keys.ToArray<string>();
+            }
+            public void set(string var, double value)
             {
                 variables[varIndicies[var]] = value;
             }
+            public bool checkVariable(string var)
+            {
+                return varIndicies.ContainsKey(var);
+            }
+            public int getVariableCount()
+            {
+                return variables.Length;
+            }
             public double execute()
             {
-                Queue<Operand> operands=new Queue<Operand>();
+                Stack<Operand> operands=new Stack<Operand>();
                 for (int i = 0; i < rpn.Count; i++)
                 {
                     if (rpn[i].Type == StackElementType.Negation)
                     {
-                        operands.Enqueue(((NegationOperator)rpn[i]).exec(operands.Dequeue()));
+                        operands.Push(((NegationOperator)rpn[i]).exec(operands.Pop()));
                     }
                     if ((rpn[i].Type & StackElementType.Addition) == StackElementType.Addition)
                     {
-                        operands.Enqueue(((BinaryOperator)rpn[i]).exec(operands.Dequeue(), operands.Dequeue()));
+                        operands.Push(((BinaryOperator)rpn[i]).exec(operands.Pop(), operands.Pop()));
                     }
                     else if (rpn[i].Type == StackElementType.Function)
                     {
                         ((Function)rpn[i]).exec(operands);
                     }
-                    else {
-                        operands.Enqueue((Operand)rpn[i]);
+                    else if (rpn[i].Type == StackElementType.Variable)
+                    {
+                        operands.Push(new Operand(variables[((Variable)rpn[i]).index]));
+                    }
+                    else
+                    {
+                        operands.Push((Operand)rpn[i]);
                     }
                 }
-                return operands.Dequeue().value;
+                return operands.Pop().value;
             }
         }
         /*class CompiledExpression

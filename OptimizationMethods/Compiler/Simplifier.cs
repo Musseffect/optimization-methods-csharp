@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OptimizationMethods.Compiler
 {
-    partial class ASTCompiler
+    public partial class ASTCompiler
     {
        public class ASTSimpleNode
        {
@@ -28,7 +28,7 @@ namespace OptimizationMethods.Compiler
                 Type = t;
             }
        }
-        class SimpleBinaryNode : ASTSimpleNode
+        public class SimpleBinaryNode : ASTSimpleNode
         {
             public ASTSimpleNode Left { get; set; }
             public ASTSimpleNode Right { get; set; }
@@ -36,38 +36,38 @@ namespace OptimizationMethods.Compiler
             {
             }
         }
-        class SimpleNegationNode : ASTSimpleNode
+        public class SimpleNegationNode : ASTSimpleNode
         {
             public ASTSimpleNode Node { get; set; }
             public SimpleNegationNode() : base(EType.Negation)
             { }
         }
-        class SimplePowerNode : SimpleBinaryNode
+        public class SimplePowerNode : SimpleBinaryNode
         {
             public SimplePowerNode() : base(EType.Power)
             { }
         }
-        class SimpleAdditionNode : SimpleBinaryNode
+        public class SimpleAdditionNode : SimpleBinaryNode
         {
             public SimpleAdditionNode() : base(EType.Addition)
             { }
         }
-        class SimpleSubtractionNode : SimpleBinaryNode
+        public class SimpleSubtractionNode : SimpleBinaryNode
         {
             public SimpleSubtractionNode() : base(EType.Subtraction)
             { }
         }
-        class SimpleMultiplicationNode : SimpleBinaryNode
+        public class SimpleMultiplicationNode : SimpleBinaryNode
         {
             public SimpleMultiplicationNode() : base(EType.Multiplication)
             { }
         }
-        class SimpleDivisionNode : SimpleBinaryNode
+        public class SimpleDivisionNode : SimpleBinaryNode
         {
             public SimpleDivisionNode() : base(EType.Division)
             { }
         }
-        class SimpleIdentifierNode : ASTSimpleNode
+        public class SimpleIdentifierNode : ASTSimpleNode
         {
             public string VariableName { get; }
             public SimpleIdentifierNode(string name) : base(EType.Identifier)
@@ -75,7 +75,7 @@ namespace OptimizationMethods.Compiler
                 VariableName = name;
             }
         }
-        class SimpleFloatNode : ASTSimpleNode
+        public class SimpleFloatNode : ASTSimpleNode
         {
             public double Value { get; }
             bool zero;
@@ -119,7 +119,7 @@ namespace OptimizationMethods.Compiler
                 return one;
             }
         }
-        class SimpleFunctionNode : ASTSimpleNode
+        public class SimpleFunctionNode : ASTSimpleNode
         {
             public FunctionEntry Func { get; }
             public List<ASTSimpleNode> Args { get; }
@@ -132,7 +132,7 @@ namespace OptimizationMethods.Compiler
 
         static ASTSimpleNode simplifyNegation(SimpleNegationNode node)
         {
-            ASTSimpleNode innerNode = simplify(node);
+            ASTSimpleNode innerNode = simplify(node.Node);
             if (innerNode.Type == ASTSimpleNode.EType.Float)
                 return -((SimpleFloatNode)innerNode);
             return node;
@@ -150,13 +150,13 @@ namespace OptimizationMethods.Compiler
                 }
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
-                    SimpleFloatNode nr = (SimpleFloatNode)left;
+                    SimpleFloatNode nr = (SimpleFloatNode)right;
                     return SimpleFloatNode.pow(nl,nr);
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)
             {
-                SimpleFloatNode nr = (SimpleFloatNode)left;
+                SimpleFloatNode nr = (SimpleFloatNode)right;
                 if (nr.isZero())
                 {
                     return new SimpleFloatNode(1.0);
@@ -185,13 +185,13 @@ namespace OptimizationMethods.Compiler
                 }
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
-                    SimpleFloatNode nr = (SimpleFloatNode)left;
+                    SimpleFloatNode nr = (SimpleFloatNode)right;
                     return nl * nr;
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)
             {
-                SimpleFloatNode nr = (SimpleFloatNode)left;
+                SimpleFloatNode nr = (SimpleFloatNode)right;
                 if (nr.isZero())
                 {
                     return right;
@@ -216,13 +216,13 @@ namespace OptimizationMethods.Compiler
                 }
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
-                    SimpleFloatNode nr = (SimpleFloatNode)left;
+                    SimpleFloatNode nr = (SimpleFloatNode)right;
                     return nl * nr;
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)
             {
-                SimpleFloatNode nr = (SimpleFloatNode)left;
+                SimpleFloatNode nr = (SimpleFloatNode)right;
                 if (nr.isOne())
                 {
                     return left;
@@ -233,9 +233,22 @@ namespace OptimizationMethods.Compiler
         static ASTSimpleNode simplifyFunction(SimpleFunctionNode node)
         {
             List<ASTSimpleNode> args=new List<ASTSimpleNode>();
+            bool constArgs = true;
             foreach (var arg in node.Args)
             {
-                args.Add(simplify(arg));
+                ASTSimpleNode p = simplify(arg);
+                args.Add(p);
+                if (p.Type != ASTSimpleNode.EType.Float)
+                    constArgs = false;
+            }
+            if (constArgs)
+            {
+                List<Operand> operands = new List<Operand>();
+                foreach (var arg in args)
+                {
+                    operands.Add(new Operand(((SimpleFloatNode)arg).Value));
+                }
+                return new SimpleFloatNode(node.Func.Exec(operands).value);
             }
             return new SimpleFunctionNode(node.Func,args);
         }
@@ -253,13 +266,13 @@ namespace OptimizationMethods.Compiler
                 }
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
-                    SimpleFloatNode nr = (SimpleFloatNode)left;
+                    SimpleFloatNode nr = (SimpleFloatNode)right;
                     return nl - nr;
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)
             {
-                SimpleFloatNode nr = (SimpleFloatNode)left;
+                SimpleFloatNode nr = (SimpleFloatNode)right;
 
                 if (nr.isZero())
                 {
@@ -282,13 +295,13 @@ namespace OptimizationMethods.Compiler
                 }
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
-                    SimpleFloatNode nr = (SimpleFloatNode)left;
+                    SimpleFloatNode nr = (SimpleFloatNode)right;
                     return nl + nr;
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)
             {
-                SimpleFloatNode nr = (SimpleFloatNode)left;
+                SimpleFloatNode nr = (SimpleFloatNode)right;
                 if (nr.isZero())
                 {
                     return left;

@@ -65,11 +65,9 @@
     <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="NumericUpDown">
-      <HintPath>G:\Users\Misha\Documents\Visual Studio 2013\Projects\BD\BD\bin\Debug\NumericUpDown.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
@@ -84,12 +82,44 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Compiler\ASTPrint.cs" />
+    <Compile Include="Methods\BestTrialMethod.cs" />
+    <Compile Include="Methods\GaussMethod.cs" />
+    <Compile Include="Methods\GoldenRuleMethod.cs" />
+    <Compile Include="Methods\GradientDescentMethod.cs" />
+    <Compile Include="Methods\LimitedQueue.cs" />
+    <Compile Include="Methods\NewtonMethod.cs" />
+    <Compile Include="Methods\NewtonRaphsenMethod.cs" />
+    <Compile Include="Methods\PassiveSearchMethod.cs" />
+    <Compile Include="Methods\SwarmMethod.cs" />
+    <Compile Include="Methods\Utils.cs" />
+    <Compile Include="Windows\MethodResults.xaml.cs">
+      <DependentUpon>MethodResults.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\PlotResult2D.xaml.cs">
+      <DependentUpon>PlotResult2D.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Test\Tester.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -110,27 +140,35 @@
     <Compile Include="ExpGrammar.g4.parser.cs">
       <DependentUpon>ExpGrammar.g4</DependentUpon>
     </Compile>
-    <Compile Include="ExpressionVisiter.cs" />
+    <Compile Include="ExpressionVisitor.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PlotResult.xaml">
+    <Page Include="Windows\MethodResults.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PlotSettings.xaml">
+    <Page Include="Windows\PlotResult.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\PlotResult2D.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\PlotSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OptMethod.cs" />
-    <Compile Include="PlotResult.xaml.cs">
+    <Compile Include="Methods\OptMethod.cs" />
+    <Compile Include="Windows\PlotResult.xaml.cs">
       <DependentUpon>PlotResult.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PlotSettings.xaml.cs">
+    <Compile Include="Windows\PlotSettings.xaml.cs">
       <DependentUpon>PlotSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">

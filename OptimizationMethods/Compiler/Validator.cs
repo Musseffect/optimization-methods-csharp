@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace OptimizationMethods.Compiler
 {
-    partial class ASTCompiler
+    public partial class ASTCompiler
     {
-        ASTSimpleNode validateNegation(NegationNode node)
+        static ASTSimpleNode validateNegation(NegationNode node)
         {
             return new SimpleNegationNode { Node = validate(node.InnerNode) };
         }
-        ASTSimpleNode validatePower(PowerNode node)
+        static ASTSimpleNode validatePower(PowerNode node)
         {
             return new SimplePowerNode {
                 Left=validate(node.Left),
                 Right=validate(node.Right)
             };
         }
-        ASTSimpleNode validateMultiplication(MultiplicationNode node)
+        static ASTSimpleNode validateMultiplication(MultiplicationNode node)
         {
             return new SimpleMultiplicationNode
             {
@@ -27,7 +27,7 @@ namespace OptimizationMethods.Compiler
                 Right = validate(node.Right)
             };
         }
-        ASTSimpleNode validateDivision(DivisionNode node)
+        static ASTSimpleNode validateDivision(DivisionNode node)
         {
             return new SimpleDivisionNode
             {
@@ -35,7 +35,7 @@ namespace OptimizationMethods.Compiler
                 Right = validate(node.Right)
             };
         }
-        ASTSimpleNode validateFunction(FunctionNode node)
+        static ASTSimpleNode validateFunction(FunctionNode node)
         {
                 FunctionEntry func = MetaData.getFunctionEntry(node.FunctionName);
                 //check function name
@@ -47,7 +47,7 @@ namespace OptimizationMethods.Compiler
                     args.Add(validate(arg));
                 return new SimpleFunctionNode(func,args);
         }
-        ASTSimpleNode validateSubtraction(SubtractionNode node)
+        static ASTSimpleNode validateSubtraction(SubtractionNode node)
         {
             return new SimpleSubtractionNode
             {
@@ -55,7 +55,7 @@ namespace OptimizationMethods.Compiler
                 Right = validate(node.Right)
             };
         }
-        ASTSimpleNode validateAddition(AdditionNode node)
+        static ASTSimpleNode validateAddition(AdditionNode node)
         {
             return new SimpleAdditionNode
             {
@@ -63,7 +63,7 @@ namespace OptimizationMethods.Compiler
                 Right = validate(node.Right)
             };
         }
-        ASTSimpleNode validate(ASTNode node)
+        static public ASTSimpleNode validate(ASTNode node)
         {
             switch (node.Type)
             {

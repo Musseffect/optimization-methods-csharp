@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OptimizationMethods.Compiler
 {
-    partial class ASTCompiler
+    public partial class ASTCompiler
     {
         static ASTSimpleNode derivativeNegation(SimpleNegationNode node)
         {
@@ -17,7 +17,36 @@ namespace OptimizationMethods.Compiler
         }
         static ASTSimpleNode derivativePower(SimplePowerNode node)
         {
-            return new SimpleMultiplicationNode
+            return new SimpleAdditionNode
+            {
+                Left = new SimpleMultiplicationNode
+                {
+                    Left = node,
+                    Right = new SimpleMultiplicationNode
+                    {
+                        Left = derivative(node.Right),
+                        Right = new SimpleFunctionNode(MetaData.getFunctionEntry("ln"), new List<ASTSimpleNode> { node.Left })
+                    }
+                },
+                Right = new SimpleMultiplicationNode
+                {
+                    Left = new SimplePowerNode
+                    {
+                        Left = node.Left,
+                        Right = new SimpleSubtractionNode
+                        {
+                            Left = node.Right,
+                            Right = new SimpleFloatNode(1.0f)
+                        }
+                    },
+                    Right = new SimpleMultiplicationNode
+                    {
+                        Left = node.Right,
+                        Right = derivative(node.Left)
+                    }
+                }
+            };
+            /*return new SimpleMultiplicationNode
             {
                 Left = node,
                 Right = new SimpleAdditionNode
@@ -37,7 +66,7 @@ namespace OptimizationMethods.Compiler
                         Right = node.Left
                     }
                 }
-            };
+            };*/
         }
         static ASTSimpleNode derivativeMultiplication(SimpleMultiplicationNode node)
         {
@@ -78,7 +107,12 @@ namespace OptimizationMethods.Compiler
                 return new SimpleFloatNode(0.0);
             if (node.Args.Count == 1)
             {
-                return node.Func.Der[0](node.Args);
+                return
+                    new SimpleMultiplicationNode
+                    {
+                        Left = derivative(node.Args[0]),
+                        Right = node.Func.Der[0](node.Args)
+                    };
             }
             SimpleAdditionNode root = new SimpleAdditionNode();
             SimpleAdditionNode current = root;
@@ -111,6 +145,11 @@ namespace OptimizationMethods.Compiler
                 return new SimpleFloatNode(0.0);
         }
         static string variable;
+        public static ASTSimpleNode computeDerivative(ASTSimpleNode root, string var)
+        {
+            variable = var;
+            return derivative(root);
+        }
         static ASTSimpleNode derivative(ASTSimpleNode node)
         {
             switch (node.Type)

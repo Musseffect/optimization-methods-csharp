@@ -10,22 +10,22 @@ namespace OptimizationMethods
 {
     abstract class Function1D
     {
-        public abstract float exec(float x);
+        public abstract double exec(double x);
     }
     abstract class FunctionND
     {
         protected int dimensions;
-        public int Dimensions{get;protected set;}
-        public abstract float exec(float[] x);
-        public abstract float[] getGradient(float[] x);
-        public abstract float[] getHessiMatrix(float[] x);
-        public float[] getNumericGradient(float[] x, float delta)
+        public int Dimensions{ get { return dimensions; } protected set { dimensions = value; } }
+        public abstract double exec(double[] x);
+        public abstract double[] getGradient(double[] x);
+        public abstract double[] getHessiMatrix(double[] x);
+        public double[] getNumericGradient(double[] x, double delta)
         {
-            float[] grad=new float[dimensions];
-            float sum = 0.0f;
+            double[] grad=new double[dimensions];
+            double sum = 0.0f;
             for (int i = 0; i < dimensions; i++)
             {
-                float xi = x[i];
+                double xi = x[i];
                 x[i] = xi - delta;
                 grad[i]=exec(x);
                 x[i] = xi + delta;
@@ -43,24 +43,28 @@ namespace OptimizationMethods
     class SymbolicFunction1D:Function1D
     {
         ExpressionStack expression;
-        public override float exec(float x)
+        public SymbolicFunction1D(ExpressionStack exp)
+        {
+            expression = exp;
+        }
+        public override double exec(double x)
         {
             expression.set("x",x);
-            return expression.execute();
+            return (double)expression.execute();
         }
     }
     class Function1DNDAdapter:Function1D
     {
         FunctionND func;
-        Vector<float> x0;
-        Vector<float> dx;
-        public Function1DNDAdapter(FunctionND func, Vector<float> x0, Vector<float> dx)
+        Vector<double> x0;
+        Vector<double> dx;
+        public Function1DNDAdapter(FunctionND func, Vector<double> x0, Vector<double> dx)
         {
             this.func = func;
             this.x0 = x0;
             this.dx = dx;
         }
-        public override float exec(float x)
+        public override double exec(double x)
         {
             return func.exec((x0+dx*x).AsArray());
         }
@@ -71,29 +75,38 @@ namespace OptimizationMethods
         List<ExpressionStack> derivatives;
         List<ExpressionStack> secondDerivatives;
         string[] variables;
-        public override float exec(float[] vars)
+        public ExpressionStack getExpression()
+        {
+            return expression;
+        }
+        public SymbolicFunctionND(ExpressionStack exp,List<ExpressionStack> der,List<ExpressionStack> secondDer,string[] variables)
+        {
+            dimensions = exp.getVariableCount();
+            expression = exp;
+            derivatives = der;
+            secondDerivatives = secondDer;
+            this.variables = variables;
+        }
+        public override double exec(double[] vars)
         {
             for(int i=0;i< Dimensions; i++)
                 expression.set(variables[i], vars[i]);
-            return expression.execute();
+            return (double)expression.execute();
         }
-        public SymbolicFunctionND()
+        public override double[] getGradient(double[] x)
         {
-        }
-        public override float[] getGradient(float[] x)
-        {
-            float[] result = new float[Dimensions];
+            double[] result = new double[Dimensions];
             for (int i = 0; i < Dimensions; i++)
             {
                 for (int j = 0; j < Dimensions; j++)
                     derivatives[i].set(variables[j], x[j]);
-                result[i]= derivatives[i].execute();
+                result[i]= (double)derivatives[i].execute();
             }
             return result;
         }
-        public override float[] getHessiMatrix(float[] x)//column major flat matrix
+        public override double[] getHessiMatrix(double[] x)//column major flat matrix
         {
-            float[] result = new float[Dimensions*Dimensions];
+            double[] result = new double[Dimensions*Dimensions];
             for (int i = 0; i < Dimensions; i++)
             {
                 for (int j = 0; j < Dimensions; j++)
@@ -101,7 +114,7 @@ namespace OptimizationMethods
                     int index = i * Dimensions + j;
                     for (int k = 0; k < Dimensions; k++)
                         secondDerivatives[index].set(variables[k], x[k]);
-                    result[i] = secondDerivatives[index].execute();
+                    result[i] = (double)secondDerivatives[index].execute();
                 }
             }
             return result;

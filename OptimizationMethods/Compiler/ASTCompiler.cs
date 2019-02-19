@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OptimizationMethods.Compiler
 {
-    partial class ASTCompiler
+    public partial class ASTCompiler
     {
-        static ExpressionStack compileASTExpression(ASTSimpleNode root)
+        public static ExpressionStack compileASTExpression(ASTSimpleNode root)
         {
             varCount = 0;
             indicies = new Dictionary<string, int>();
@@ -71,6 +71,7 @@ namespace OptimizationMethods.Compiler
             if (!indicies.TryGetValue(node.VariableName,out index))
             {
                 index = varCount;
+                indicies[node.VariableName] = index;
                 varCount++;
             }
             rpn.Add(new Variable(index));

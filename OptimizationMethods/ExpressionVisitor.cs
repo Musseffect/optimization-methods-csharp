@@ -99,7 +99,7 @@ namespace OptimizationMethods
         }
         public double Value { get; set; }
     }
-    class ExpressionVisiter:ExpGrammarBaseVisitor<ASTNode>
+    class ExpressionVisitor:ExpGrammarBaseVisitor<ASTNode>
     {
         public override ASTNode VisitBinaryOperatorExpression([NotNull] ExpGrammarParser.BinaryOperatorExpressionContext context)
         {
@@ -139,17 +139,12 @@ namespace OptimizationMethods
 
         public override ASTNode VisitCompileUnit([NotNull] ExpGrammarParser.CompileUnitContext context)
         {
-            return Visit(context);
+            return Visit(context.expression());
         }
 
         public override ASTNode VisitConstantExpression([NotNull] ExpGrammarParser.ConstantExpressionContext context)
         {
             return Visit(context.value);
-        }
-
-        public override ASTNode VisitExpression([NotNull] ExpGrammarParser.ExpressionContext context)
-        {
-            return base.VisitExpression(context);
         }
 
         public override ASTNode VisitFunctionExpression([NotNull] ExpGrammarParser.FunctionExpressionContext context)
