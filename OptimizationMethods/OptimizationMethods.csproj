@@ -114,6 +114,12 @@
     <Compile Include="Methods\PassiveSearchMethod.cs" />
     <Compile Include="Methods\SwarmMethod.cs" />
     <Compile Include="Methods\Utils.cs" />
+    <Compile Include="Windows\BorderSetter.xaml.cs">
+      <DependentUpon>BorderSetter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GaussSettings.xaml.cs">
+      <DependentUpon>GaussSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MethodResults.xaml.cs">
       <DependentUpon>MethodResults.xaml</DependentUpon>
     </Compile>
@@ -146,6 +152,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\BorderSetter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GaussSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MethodResults.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
