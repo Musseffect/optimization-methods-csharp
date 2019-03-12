@@ -10,6 +10,7 @@ namespace OptimizationMethods
     abstract class OptMethod1D
     {
         public abstract MinPointND getMinimum(double a, double b, Function1D func);
+        public abstract MinPointND getMinimum(double a, double b, Function1D func,out int iters);
     }
     abstract class OptMethodND
     {

@@ -8,19 +8,42 @@
              mc:Ignorable="d" 
              x:Name="uc"
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <Grid>
-        <ScrollViewer x:Name="ScrollViewer" HorizontalAlignment="Left" Height="450" VerticalAlignment="Top" Width="800">
-            <ItemsControl ItemsSource="{Binding Path=VariableCollection, ElementName=uc}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <Label Content="{Binding Path=Name}"/>
-                            <xctk:DoubleUpDown Value="{Binding Path=ValueMin}" Minimum="{TemplateBinding Min}" Maximum="{TemplateBinding Max}"/>
-                            <xctk:DoubleUpDown Value="{Binding Path=ValueMax}" Minimum="{TemplateBinding Min}" Maximum="{TemplateBinding Max}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ListView x:Name="Items" ItemsSource="{Binding Path=VariableCollection, ElementName=uc}">
+            <ListView.View>
+                <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Visibility"
+    							Value="Visible"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="Переменная">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Margin="0"
+    								VerticalAlignment="Center"
+    								Content="{Binding Path=Label}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Минимум">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <xctk:DoubleUpDown Value="{Binding Path=ValueMin}" Minimum="{Binding Path=Min,ElementName=uc}" Maximum="{Binding Path=Max,ElementName=uc}" Width="100"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Максимум">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <xctk:DoubleUpDown Value="{Binding Path=ValueMax}" Minimum="{Binding Path=Min,ElementName=uc}" Maximum="{Binding Path=Max,ElementName=uc}" Width="100"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>

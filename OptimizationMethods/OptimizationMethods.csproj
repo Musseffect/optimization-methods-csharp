@@ -114,19 +114,41 @@
     <Compile Include="Methods\PassiveSearchMethod.cs" />
     <Compile Include="Methods\SwarmMethod.cs" />
     <Compile Include="Methods\Utils.cs" />
+    <Compile Include="Windows\Methods\BestProbeSettings.xaml.cs">
+      <DependentUpon>BestProbeSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\BorderSetter.xaml.cs">
       <DependentUpon>BorderSetter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\GaussSettings.xaml.cs">
+    <Compile Include="Windows\Methods\Common.cs" />
+    <Compile Include="Windows\Methods\GaussSettings.xaml.cs">
       <DependentUpon>GaussSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Methods\GoldenRuleSettings.xaml.cs">
+      <DependentUpon>GoldenRuleSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Methods\GradientDescentSettings.xaml.cs">
+      <DependentUpon>GradientDescentSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MethodResults.xaml.cs">
       <DependentUpon>MethodResults.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Methods\NewtonRaphsonSettings.xaml.cs">
+      <DependentUpon>NewtonRaphsonSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Methods\NewtonSettings.xaml.cs">
+      <DependentUpon>NewtonSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Methods\PassiveSearchSettings.xaml.cs">
+      <DependentUpon>PassiveSearchSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\PlotResult2D.xaml.cs">
       <DependentUpon>PlotResult2D.xaml</DependentUpon>
     </Compile>
     <Compile Include="Test\Tester.cs" />
+    <Compile Include="Windows\Methods\SwarmSettings.xaml.cs">
+      <DependentUpon>SwarmSettings.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -152,15 +174,39 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\Methods\BestProbeSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\BorderSetter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\GaussSettings.xaml">
+    <Page Include="Windows\Methods\GaussSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Methods\GoldenRuleSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Methods\GradientDescentSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\MethodResults.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Methods\NewtonRaphsonSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Methods\NewtonSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Methods\PassiveSearchSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,6 +219,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\PlotSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Methods\SwarmSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

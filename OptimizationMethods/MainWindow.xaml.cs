@@ -31,7 +31,7 @@ namespace OptimizationMethods
             InitializeComponent();
             ASTCompiler.MetaData.Init();
         }
-        private SymbolicFunctionND compileFunctionND(string expression)
+        static private SymbolicFunctionND compileFunctionND(string expression)
         {
             AntlrInputStream inputStream = new AntlrInputStream(expression);
             ExpGrammarLexer expLexer = new ExpGrammarLexer(inputStream);
@@ -60,21 +60,27 @@ namespace OptimizationMethods
             rootSimple = Compiler.ASTCompiler.simplify(rootSimple);
             var exp=compileASTExpression(rootSimple);
             string[]variables = exp.getVariableNames();
+            if (variables.Length == 0)
+            {
+                throw new Exception("Выражение не содержит переменных");
+            }
             List<ExpressionStack> derivatives=new List<ExpressionStack>();
             List<ExpressionStack> secondDerivatives=new List<ExpressionStack>();
             for (int i = 0; i < variables.Length; i++)
             {
                 var derRoot = simplify(computeDerivative(rootSimple,variables[i]));
                 derivatives.Add(compileASTExpression(derRoot));
+                //Console.WriteLine("dfd"+variables[i]+" "+(new ASTPrint()).print(derRoot));
                 for (int j = 0; j < variables.Length; j++)
                 {
                     var secondDerRoot = simplify(computeDerivative(derRoot, variables[j]));
                     secondDerivatives.Add(compileASTExpression(secondDerRoot));
+                    //Console.WriteLine("df2d" + variables[i] +"d" + variables[j] + " " + (new ASTPrint()).print(secondDerRoot));
                 }
             }
             return new SymbolicFunctionND(exp,derivatives,secondDerivatives, variables);
         }
-        private ExpressionStack compileExpression(string expression)
+        static private ExpressionStack compileExpression(string expression)
         {
             AntlrInputStream inputStream = new AntlrInputStream(expression);
             ExpGrammarLexer expLexer = new ExpGrammarLexer(inputStream);
@@ -102,6 +108,15 @@ namespace OptimizationMethods
             var rootSimple = Compiler.ASTCompiler.validate(root);
             rootSimple = Compiler.ASTCompiler.simplify(rootSimple);
             return compileASTExpression(rootSimple);
+        }
+        static private SymbolicFunction1D compileFunction1D(string expression)
+        {
+            ExpressionStack exp = compileExpression(expression);
+            if (exp.getVariableCount() != 1)
+            {
+                throw new Exception("Ожидается функция одной переменной");
+            }
+            return new SymbolicFunction1D(exp);
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -131,159 +146,146 @@ namespace OptimizationMethods
                 throw new Exception("Некорректное число переменных");
             return expressionStack;
         }
-        List<Point> calc1D(int resolution, double x1, double x2,ExpressionStack exp)
-        {
-            double dx = (x2 - x1) / (resolution - 1);
-            List<Point> points = new List<Point>(resolution);
-            for (int i = 0; i < resolution; i++)
-            {
-                double x = x1 + dx * i;
-                exp.set("x", (float)x);
-                points.Add(new Point(x, exp.execute()));
-            }
-            return points;
-        }
-        List<Point3D> calc2D(int resolutionX,int resolutionY,double x1,double x2,double y1,double y2,ExpressionStack exp)
-        {
-            double dx = (x2 - x1) / (resolutionX - 1);
-            double dy = (y2 - y1) / (resolutionY - 1);
-            List<Point3D> points = new List<Point3D>(resolutionX * resolutionY);
-            double min = double.MaxValue, max = double.MinValue;
-            for (int j = 0; j < resolutionY; j++)
-            {
-                double y = y1 + dy * j;
-                exp.set("y", (float)y);
-                for (int i = 0; i < resolutionX; i++)
-                {
-                    double x = x1 + dx * i;
-                    exp.set("x", (float)x);
-                    double z = exp.execute();
-                    min = Math.Min(min, z);
-                    max = Math.Max(max, z);
-                    points.Add(new Point3D(x, y, z));
-                }
-            }
-            return points;
-        }
-        private void ButtonPassive_Click(object sender, RoutedEventArgs e)
-        {
-            PassiveSearchMethod method = new PassiveSearchMethod();
-            method.PointCount = PassiveSearchPointCount.Value.Value;
-            try
-            {
-                ExpressionStack stack = getOneDim();
-                double b1, b2;
-                b1 = X1.Value.Value;
-                b2 = X2.Value.Value;
-                MinPointND mp=method.getMinimum((float)b1,(float)b2,new SymbolicFunction1D(stack));
-                MethodResults mr = new MethodResults(calc1D(100,b1,b2,stack), 1, new List<MinPointND> { mp },stack.getVariableNames(),new List<int> { 100},"");
-                mr.Show();
-            } catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message,"Error");
-                return;
-            }
-        }
-        private void ButtonGolden_Click(object sender, RoutedEventArgs e)
-        {
-            GoldenRuleMethod method = new GoldenRuleMethod();
-            method.Epsilon = (float)GoldenEpsilon.Value.Value;
-            method.Iterations = GoldenIterations.Value.Value;
-            try {
-                ExpressionStack stack = getOneDim();
-                double b1, b2;
-                b1 = X1.Value.Value;
-                b2 = X2.Value.Value;
-                int iters;
-                List<MinPointND> mp = method.getMinimumSolutions((float)b1, (float)b2, new SymbolicFunction1D(stack),out iters);
-                MethodResults mr = new MethodResults(calc1D(100, b1, b2, stack), 1, mp, stack.getVariableNames(), new List<int> { 100 },"Iterations: "+iters.ToString());
-                mr.Show();
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message, "Error");
-                return;
-            }
 
-        }
-        private void executeNDMethod(OptMethodND method)
+        private void Swarm_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string exp = Expression.Text;
-                SymbolicFunctionND func= compileFunctionND(exp);
-                ExpressionStack expressionStack = func.getExpression();
-                int varCount = expressionStack.getVariableCount();
-                if ( varCount!=2)
-                    throw new Exception("Некорректное число переменных");
-                double x1, x2, y1, y2;
-                x1 = X1.Value.Value;
-                x2 = X2.Value.Value;
-                y1 = Y1.Value.Value;
-                y2 = Y2.Value.Value;
-                method.setBounds(new double[] { x1,y1 }, new double[] { x2, y2 });
-                OptMethodResult mp = method.getMinimum(func,10);
-                MethodResults mr = new MethodResults(calc2D(100, 100, x1, x2, y1, y2, expressionStack), 2, mp.solutions, expressionStack.getVariableNames(), new List<int> { 100, 100 },
-                    "Iterations: "+mp.iterations.ToString());
-                mr.Show();
+                SymbolicFunctionND function = compileFunctionND(Expression.Text);
+                SwarmSettings window = new SwarmSettings(function);
+                window.Show();
             }
             catch (Exception exc)
             {
-                MessageBox.Show(exc.Message, "Error");
-                return;
+                MessageBox.Show("Error",exc.Message);
             }
         }
-        private void SwarmButton_Click(object sender, RoutedEventArgs e)
-        {
-            SwarmMethod method = new SwarmMethod()
-            {
-                Iterations=SwarmIterations.Value.Value,
-                PhiG=SwarmPhiG.Value.Value,
-                PhiP=SwarmPhiP.Value.Value,
-                SwarmSize=SwarmSize.Value.Value,
-                W=SwarmW.Value.Value
-            };
-                executeNDMethod(method);
-           
-        }
-
         private void BestProbe_Click(object sender, RoutedEventArgs e)
         {
-            BestTrialMethod method = new BestTrialMethod();
-            method.setParameters(ProbeIters.Value.Value,ProbeVectorCount.Value.Value, ProbeStep.Value.Value, ProbeEpsilonX.Value.Value, ProbeEpsilonY.Value.Value);
-            executeNDMethod(method);
-        }
-
-        private void ButtonGauss_Click(object sender, RoutedEventArgs e)
-        {
-            GaussMethod method = new GaussMethod();
-            GoldenRuleMethod method1D = new GoldenRuleMethod();
-            method1D.Epsilon = 0.1;
-            method1D.Iterations = 10;
-            method.setMethod(method1D);
-            method.setParameters(GaussIters.Value.Value,GaussEpsilonY.Value.Value,GaussEpsilonX.Value.Value);
-            executeNDMethod(method);
-        }
-
-        private void Descent_Click(object sender, RoutedEventArgs e)
-        {
-            GradientDescentMethod method = new GradientDescentMethod();
-            method.setParameters(DescentIters.Value.Value,DescentEpsilonY.Value.Value,DescentEpsilonX.Value.Value);
-            executeNDMethod(method);
-        }
-
-        private void Newton_Click(object sender, RoutedEventArgs e)
-        {
-            NewtonMethod method = new NewtonMethod();
-            method.setParameters(NewtonIters.Value.Value,NewtonEpsilonY.Value.Value, NewtonEpsilonX.Value.Value,NewtonAlpha.Value.Value);
-            executeNDMethod(method);
-        }
-
+            try
+            {
+                SymbolicFunctionND function = compileFunctionND(Expression.Text);
+                BestProbeSettings window = new BestProbeSettings(function);
+                window.Show();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error",exc.Message);
+            }
+}
         private void NewtonRaphson_Click(object sender, RoutedEventArgs e)
         {
-            NewtonRaphsenMethod method = new NewtonRaphsenMethod();
-            method.setParameters(NRIters.Value.Value, NREpsilonY.Value.Value,NREpsilonX.Value.Value);
-            executeNDMethod(method);
+            try
+            {
+                SymbolicFunctionND function = compileFunctionND(Expression.Text);
+                NewtonRaphsonSettings window = new NewtonRaphsonSettings(function);
+                window.Show();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error", exc.Message);
+            }
+        }
+        private void Newton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SymbolicFunctionND function = compileFunctionND(Expression.Text);
+                NewtonSettings window = new NewtonSettings(function);
+                window.Show();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error", exc.Message);
+            }
+        }
+        private void GradientDescent_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SymbolicFunctionND function = compileFunctionND(Expression.Text);
+                GradientDescentSettings window = new GradientDescentSettings(function);
+                window.Show();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error", exc.Message);
+            }
+        }
+        private void Gauss_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SymbolicFunctionND function = compileFunctionND(Expression.Text);
+                GaussSettings window = new GaussSettings(function);
+                window.Show();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error", exc.Message);
+            }
+        }
+        private void GoldenRule_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SymbolicFunction1D function = compileFunction1D(Expression.Text);
+                GoldenRuleSettings window = new GoldenRuleSettings(function);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error", exc.Message);
+            }
+        }
+        private void Passive_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SymbolicFunction1D function = compileFunction1D(Expression.Text);
+                PassiveSearchSettings window = new PassiveSearchSettings(function);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Error", exc.Message);
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Expression.Text = "x*x";
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {//Функция Розенброка
+            Expression.Text = "sqr(1-x)+100*sqr(y-sqr(x))";
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            Expression.Text = "x*x+y*y";
+        }
+
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            //Химмельблау
+            Expression.Text ="sqr(sqr(x)+y-11)+sqr(x+sqr(y)-7)";
+        }
+
+        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        {
+            //Изома
+            Expression.Text = "-cos(x)*cos(y)*exp(-sqr(x-pi())-sqr(y-pi()))";
+        }
+
+        private void MenuItem_Click_5(object sender, RoutedEventArgs e)
+        {
+            //Растригина
+            Expression.Text = "10*2+x*x-10*cos(2*pi()*x)+y*y-10*cos(2*pi()*y)";
+        }
+
+        private void MenuItem_Click_6(object sender, RoutedEventArgs e)
+        {
+            Expression.Text = "10+x*x-10*cos(2*pi()*x)";
         }
     }
 }

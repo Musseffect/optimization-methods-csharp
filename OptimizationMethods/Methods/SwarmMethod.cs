@@ -4,17 +4,19 @@ using System.Collections.Generic;
 //Лаб 8
 class SwarmMethod : OptMethodND
 {
-
     int swarmSize;
     double w;
     double phiP;
     double phiG;
     int iterations;
-    public int SwarmSize { get { return swarmSize; } set {swarmSize=value; } }
-    public double W { get { return w;}set { w = value; } }
-    public double PhiP { get { return phiP; }set { phiP = value; } }
-    public double PhiG { get { return phiG; } set { phiG = value; } }
-    public int Iterations { get { return iterations; } set { iterations = value; } }
+    public void setParameters(int swarmSize, double w, double phiP, double phiG, int iterations)
+    {
+        this.swarmSize = swarmSize;
+        this.w = w;
+        this.phiP = phiP;
+        this.phiG = phiG;
+        this.iterations = iterations;
+    }
     public override OptMethodResult getMinimum(FunctionND func, int solutions)
     {
         Random r = new Random();

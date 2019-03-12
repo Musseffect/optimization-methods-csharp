@@ -6,10 +6,12 @@ namespace OptimizationMethods
     class GoldenRuleMethod : OptMethod1D
     {
         double epsilon;
-        public double Epsilon { private get { return epsilon; } set { epsilon = value; } }
         int iterations;
-        public int Iterations { private get { return iterations; } set { iterations = value; } }
-
+        public void setParameters(double epsilon, int iterations)
+        {
+            this.epsilon = epsilon;
+            this.iterations = iterations;
+        }
         public override MinPointND getMinimum(double a, double b, Function1D func)
         {
             double x1;
@@ -50,7 +52,8 @@ namespace OptimizationMethods
             double x = (a + b) * 0.5f;
             return new MinPointND(new double[] { x }, func.exec(x));
         }
-        public List<MinPointND> getMinimumSolutions(double a, double b, Function1D func,out int iters)
+
+        public override MinPointND getMinimum(double a, double b, Function1D func,out int iters)
         {
             double x1;
             double x2;
@@ -58,7 +61,7 @@ namespace OptimizationMethods
 
             double fx1;
             double fx2;
-            List<MinPointND> list=new List<MinPointND>();
+            List<MinPointND> list = new List<MinPointND>();
             x2 = a + (b - a) / t;
             fx2 = func.exec(x2);
             x1 = a + b - x2;
@@ -84,17 +87,15 @@ namespace OptimizationMethods
                 }
                 if (Math.Abs(a - b) < epsilon)
                 {
-                    iters = i;
                     double _x = (a + b) * 0.5f;
-                    list.Add(new MinPointND(new double[] { _x }, func.exec(_x)));
-                    return list;
+                    iters = i;
+                    return new MinPointND(new double[] { _x }, func.exec(_x));
                 }
                 i++;
             }
-            double x = (a + b) * 0.5f;
-            list.Add(new MinPointND(new double[] { x }, func.exec(x)));
             iters = i;
-            return list;
+            double x = (a + b) * 0.5f;
+            return new MinPointND(new double[] { x }, func.exec(x));
         }
     }
 }

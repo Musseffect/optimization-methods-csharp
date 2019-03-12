@@ -260,14 +260,14 @@ namespace OptimizationMethods.Compiler
             if (left.Type == ASTSimpleNode.EType.Float)
             {
                 SimpleFloatNode nl = (SimpleFloatNode)left;
-                if (nl.isZero())
-                {
-                    return right;
-                }
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
                     SimpleFloatNode nr = (SimpleFloatNode)right;
                     return nl - nr;
+                }
+                if (nl.isZero())
+                {
+                    return new SimpleNegationNode{Node=right};
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)

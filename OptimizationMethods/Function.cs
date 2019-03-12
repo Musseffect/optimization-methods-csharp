@@ -8,11 +8,11 @@ using static OptimizationMethods.Compiler.ASTCompiler;
 
 namespace OptimizationMethods
 {
-    abstract class Function1D
+    public abstract class Function1D
     {
         public abstract double exec(double x);
     }
-    abstract class FunctionND
+    public abstract class FunctionND
     {
         protected int dimensions;
         public int Dimensions{ get { return dimensions; } protected set { dimensions = value; } }
@@ -40,12 +40,20 @@ namespace OptimizationMethods
             return grad;
         }
     }
-    class SymbolicFunction1D:Function1D
+    public class SymbolicFunction1D : Function1D
     {
         ExpressionStack expression;
         public SymbolicFunction1D(ExpressionStack exp)
         {
             expression = exp;
+        }
+        public ExpressionStack getExpression()
+        {
+            return expression;
+        }
+        public string getVariableName()
+        {
+            return expression.getVariableNames()[0];
         }
         public override double exec(double x)
         {
@@ -53,7 +61,7 @@ namespace OptimizationMethods
             return (double)expression.execute();
         }
     }
-    class Function1DNDAdapter:Function1D
+    public class Function1DNDAdapter:Function1D
     {
         FunctionND func;
         Vector<double> x0;
@@ -69,7 +77,7 @@ namespace OptimizationMethods
             return func.exec((x0+dx*x).AsArray());
         }
     }
-    class SymbolicFunctionND : FunctionND
+    public class SymbolicFunctionND : FunctionND
     {
         ExpressionStack expression;
         List<ExpressionStack> derivatives;
@@ -114,7 +122,7 @@ namespace OptimizationMethods
                     int index = i * Dimensions + j;
                     for (int k = 0; k < Dimensions; k++)
                         secondDerivatives[index].set(variables[k], x[k]);
-                    result[i] = (double)secondDerivatives[index].execute();
+                    result[index] = (double)secondDerivatives[index].execute();
                 }
             }
             return result;

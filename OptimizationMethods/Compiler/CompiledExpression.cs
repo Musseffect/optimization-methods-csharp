@@ -438,7 +438,13 @@ namespace OptimizationMethods.Compiler
             }
             public void set(string var, double value)
             {
-                variables[varIndicies[var]] = value;
+                try
+                {
+                    variables[varIndicies[var]] = value;
+                }
+                catch (Exception)
+                {
+                }
             }
             public bool checkVariable(string var)
             {
@@ -456,8 +462,7 @@ namespace OptimizationMethods.Compiler
                     if (rpn[i].Type == StackElementType.Negation)
                     {
                         operands.Push(((NegationOperator)rpn[i]).exec(operands.Pop()));
-                    }
-                    if ((rpn[i].Type & StackElementType.Addition) == StackElementType.Addition)
+                    } else if ((rpn[i].Type & StackElementType.Addition) == StackElementType.Addition)
                     {
                         operands.Push(((BinaryOperator)rpn[i]).exec(operands.Pop(), operands.Pop()));
                     }

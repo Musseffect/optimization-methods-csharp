@@ -19,6 +19,9 @@ class NewtonMethod : OptMethodND
     {
         LimitedQueue<MinPointND> queue = new LimitedQueue<MinPointND>(solutionCount);
         Vector<double> x = Vector<double>.Build.Dense(func.Dimensions);
+        Random r = new Random();
+        for (int i = 0; i < func.Dimensions; i++)
+            x[i] = Utils.mix(minBound[i], maxBound[i], (double)r.NextDouble());
         double y = func.exec(x.AsArray());
         queue.Add(new MinPointND(x.AsArray(),y));
         int iter = 0;

@@ -1,0 +1,52 @@
+﻿<Window x:Class="OptimizationMethods.Windows.GradientDescentSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OptimizationMethods.Windows"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Алгоритм наискорейшего спуска" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Header="Параметры" Grid.Column="0" Padding="0,5,0,0">
+            <Grid  Background="#FFE5E5E5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
+                <xctk:IntegerUpDown x:Name="DescentIters" Grid.Row="0" Grid.Column="1" Value="0" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Погрешность |dX|" Margin="5"/>
+                <xctk:DoubleUpDown x:Name="DescentEpsilonX" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="Погрешность |dY|" Margin="5"/>
+                <xctk:DoubleUpDown x:Name="DescentEpsilonY" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
+                <Label Content="Одномерный метод" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
+                <Label Grid.Row="4" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
+                <xctk:IntegerUpDown x:Name="Iters1D" Grid.Row="4" Grid.Column="1" Value="10" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
+                <Label Grid.Row="5" Grid.Column="0" Content="Погрешность" HorizontalAlignment="Left" Margin="5"/>
+                <xctk:DoubleUpDown x:Name="Epsilon1D" Grid.Row="5" Grid.Column="1" Value="0.001" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="0" Width="100" HorizontalAlignment="Left" Margin="5" />
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="0" Header="Границы" Grid.Column="1" Padding="0,5,0,0">
+            <local:BorderSetter Background="#FFE5E5E5" Grid.Column="2" Grid.RowSpan="4" x:Name="BorderSetter" Min="-100.0" Max="100.0"/>
+        </GroupBox>
+        <Button Grid.Row="1" Grid.Column="1" Content="OK" HorizontalAlignment="Right" Margin="0,5,5,0" Padding="10,5" Height="30" VerticalAlignment="Top" Click="Button_Click"/>
+    </Grid>
+</Window>

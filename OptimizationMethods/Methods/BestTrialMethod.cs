@@ -11,7 +11,7 @@ class BestTrialMethod : OptMethodND
     double epsilonY;
     double epsilonX;
     OptMethod1D method;
-    void setMethod(OptMethod1D method)
+    public void setMethod(OptMethod1D method)
     {
         this.method = method;
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,30 +21,55 @@ namespace OptimizationMethods.Windows
     /// Логика взаимодействия для BorderSetter.xaml
     /// </summary>
     /// 
-    [TemplatePart(Name = "Min", Type = typeof(float)),
-    TemplatePart(Name = "Max", Type = typeof(float))]
     public partial class BorderSetter : UserControl
     {
-        class VariableEntry
+        public class VariableEntry: INotifyPropertyChanged
         {
-            public float ValueMin{ get; set; }
-            public float ValueMax{ get; set; }
-
+            public double ValueMin { get; set; }
+            public double ValueMax { get; set; }
+            public string Label { get; set; }
+            public event PropertyChangedEventHandler PropertyChanged;
+            public void OnPropertyChanged([CallerMemberName]string prop = "")
+            {
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            }
         };
-        public List<VariableEntry> VariableCollection;
-        string[] variables;
+        public double Min
+        {
+            get { return (double)GetValue(MinProperty); }
+            set { SetValue(MinProperty, value); }
+        }
+        public double Max
+        {
+            get { return (double)GetValue(MaxProperty); }
+            set { SetValue(MaxProperty, value); }
+        }
+        public static readonly DependencyProperty MinProperty =
+         DependencyProperty.Register("Min", typeof(double), typeof(BorderSetter));
+        public static readonly DependencyProperty MaxProperty =
+         DependencyProperty.Register("Max", typeof(double), typeof(BorderSetter));
+        public List<VariableEntry> VariableCollection { get; set; } = new List<VariableEntry>() {};
         public BorderSetter()
         {
-            variables = null;
-            min = null;
-            max = null;
+            InitializeComponent();
         }
-        public float[] GetMin()
+        public double[] GetMin()
         {
+            double[] min = new double[VariableCollection.Count];
+            for (int i = 0; i < VariableCollection.Count; i++)
+            {
+                min[i] = VariableCollection[i].ValueMin;
+            }
             return min;
         }
-        public float[] GetMax()
+        public double[] GetMax()
         {
+            double[] max = new double[VariableCollection.Count];
+            for (int i = 0; i < VariableCollection.Count; i++)
+            {
+                max[i] = VariableCollection[i].ValueMax;
+            }
             return max;
         }
     }

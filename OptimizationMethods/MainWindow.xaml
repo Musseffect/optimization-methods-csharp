@@ -7,10 +7,9 @@
         x:Class="OptimizationMethods.MainWindow"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Методы оптимизации" Height="450" Width="800">
+        Title="Методы оптимизации" Height="169" Width="312">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -18,6 +17,31 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Menu>
+            <MenuItem Header="Методы">
+                <MenuItem x:Name="Passive" Header="Метод пассивного поиска" Click="Passive_Click"/>
+                <MenuItem x:Name="GoldenRule" Header="Метод золотого сечения" Click="GoldenRule_Click"/>
+                <MenuItem x:Name="Gauss" Header="Метод Гаусса" Click="Gauss_Click"/>
+                <MenuItem x:Name="GradientDescent" Header="Алгоритм наискорейшего спуска" Click="GradientDescent_Click"/>
+                <MenuItem x:Name="Newton" Header="Метод Ньютона" Click="Newton_Click"/>
+                <MenuItem x:Name="NewtonRaphson" Header="Алгоритм Ньютона-Рафсона" Click="NewtonRaphson_Click"/>
+                <MenuItem x:Name="BestProbe" Header="Алгоритм наилучшей пробы" Click="BestProbe_Click"/>
+                <MenuItem x:Name="Swarm" Header="Метод роя частиц" Click="Swarm_Click"/>
+            </MenuItem>
+            <MenuItem Header="Функции">
+                <MenuItem Header="Одномерные">
+                    <MenuItem Header="Функция сферы min=0" Click="MenuItem_Click"/>
+                    <MenuItem Header="Функция Растригина min=0, |x|&lt;=5.12" Click="MenuItem_Click_6"/>
+                </MenuItem>
+                <MenuItem Header="Двухмерные">
+                    <MenuItem Header="Функция Розенброка min=0" Click="MenuItem_Click_1"/>
+                    <MenuItem Header="Функция сферы min=0" Click="MenuItem_Click_2"/>
+                    <MenuItem Header="Функция Химельблау min=0, |x,y|&lt;=5" Click="MenuItem_Click_3"/>
+                    <MenuItem Header="Функция Изома min=-1 |x,y|&lt;=100" Click="MenuItem_Click_4"/>
+                    <MenuItem Header="Функция Растригина min=0 |x,y|&lt;=5.12" Click="MenuItem_Click_5"/>
+                </MenuItem>
+                </MenuItem>
+        </Menu>
         <Grid Grid.Row="1" Margin="10,10,10,5" RenderTransformOrigin="0.407,0.5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -30,390 +54,6 @@
             <TextBox Name="Expression" Grid.Row="0" Grid.Column="1" Height="30" Margin="5,5,5,5" TextWrapping="Wrap" Text="x*x+5" VerticalAlignment="Top" ToolTip="Выражение функции"/>
             <Label Grid.Row="0" Grid.Column="0" Content="Функция&#xA;" VerticalAlignment="Top" Height="30" Margin="10,5,5,5"/>
             <Button Grid.Row="0" Grid.Column="2" Content="График" Margin="5,5,10,5" HorizontalAlignment="Right" Padding="5,1" ScrollViewer.CanContentScroll="True" Click="Button_Click"/>
-        </Grid>
-        <Grid Grid.Row="2" Margin="10,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Метод" Grid.Row="0" Grid.Column="0"/>
-            <ComboBox Name="method" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" SelectedIndex="6" Margin="10,0,0,0">
-                <ComboBoxItem Content="Метод пассивного поиска"/>
-                <ComboBoxItem Content="Метод золотого сечения"/>
-                <ComboBoxItem Content="Метод Гаусса"/>
-                <ComboBoxItem Content="Алгоритм наискорейшего спуска"/>
-                <ComboBoxItem Content="Метод Ньютона"/>
-                <ComboBoxItem Content="Алгоритм Ньютона-Рафсона"/>
-                <ComboBoxItem Content="Алгоритм наилучшей пробы"/>
-                <ComboBoxItem Content="Метод роя частиц"/>
-            </ComboBox>
-        </Grid>
-        <Grid Grid.Column="0" Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <GroupBox Grid.Column="0" Header="Параметры" Margin="10">
-                <Grid>
-                    <Grid Grid.Column="0" x:Name="method0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во точек" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="PassiveSearchPointCount" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="200" HorizontalAlignment="Left" Margin="5" Width="100" Value="10" />
-                        <Button x:Name="ButtonPassive" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="ButtonPassive_Click">
-                            
-                        </Button>
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="0"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method1" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="GoldenIterations" Grid.Row="0" Grid.Column="1" Value="20" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Погрешность" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="GoldenEpsilon" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Button x:Name="ButtonGolden" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="ButtonGolden_Click"></Button>
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="1"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method2" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="GaussIters" Grid.Row="0" Grid.Column="1" Value="0" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Погрешность X" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="GaussEpsilonX" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Погрешность Y" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="GaussEpsilonY" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-                        <Button x:Name="ButtonGauss" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="ButtonGauss_Click"/>
-
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="2"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method3" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="DescentIters" Grid.Row="0" Grid.Column="1" Value="0" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Погрешность X" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="DescentEpsilonX" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Погрешность Y" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="DescentEpsilonY" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Button x:Name="Descent" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="Descent_Click"></Button>
-
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="3"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method4" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="NewtonIters" Grid.Row="0" Grid.Column="1" Value="0" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Погрешность X" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="NewtonEpsilonX" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Погрешность Y" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="NewtonEpsilonY" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Альфа" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="NewtonAlpha" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="1" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-                        <Button x:Name="Newton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="Newton_Click"></Button>
-
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="4"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method5" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="NRIters" Grid.Row="0" Grid.Column="1" Value="0" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Погрешность X" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="NREpsilonX" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Погрешность Y" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="NREpsilonY" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-                        <Button x:Name="NewtonRaphson" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="NewtonRaphson_Click"></Button>
-
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="5"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method6" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="ProbeIters" Grid.Row="0" Grid.Column="1" Value="20" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="0" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="1" Grid.Column="0" Content="Шаг" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="ProbeStep" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="1" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Погрешность X" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="ProbeEpsilonX" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="1" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="3" Grid.Column="0" Content="Погрешность Y" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="ProbeEpsilonY" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="1" Value="0.001" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="4" Grid.Column="0" Content="Кол-во векторов" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="ProbeVectorCount" Grid.Row="4" Grid.Column="1" Minimum="1" Maximum="30" Value="4" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-
-                        <Button x:Name="BestProbe" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="BestProbe_Click"></Button>
-
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="6"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                    <Grid Grid.Column="0" x:Name="method7" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Кол-во итераций" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="SwarmIterations" Grid.Row="0" Grid.Column="1"  Minimum="1" Maximum="1000" Value="10" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-                        <Label Grid.Row="1" Grid.Column="0" Content="Кол-во частиц" HorizontalAlignment="Left" Margin="5"/>
-                        <xctk:IntegerUpDown x:Name="SwarmSize" Grid.Row="1" Grid.Column="1" Value="100" Maximum="1000" ClipValueToMinMax="True" CultureInfo="en-US" DefaultValue="100" Minimum="1" Width="100" HorizontalAlignment="Left" Margin="5" />
-                        <Label Grid.Row="2" Grid.Column="0" Content="w" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="SwarmW" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="1" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-                        <Label Grid.Row="3" Grid.Column="0" Content="phiP" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="SwarmPhiP" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="200" Value="1" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-                        <Label Grid.Row="4" Grid.Column="0" Content="phiG" Margin="5"/>
-                        <xctk:DoubleUpDown x:Name="SwarmPhiG" Grid.Row="4" Grid.Column="1"  Minimum="0" Maximum="200" Value="1" CultureInfo="en-US" HorizontalAlignment="Left" Margin="5" Width="100"/>
-
-                        <Button x:Name="SwarmButton" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Запуск" HorizontalAlignment="Left" Margin="5" Padding="5,1" Click="SwarmButton_Click"/>
-
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="7"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                    </Grid>
-                </Grid>
-            </GroupBox>
-            <GroupBox Grid.Column="1" Header="Границы" Margin="10">
-                <Grid Grid.Column="1" x:Name="Borders">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid  Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Content="x1" Grid.Row="0" Grid.Column="0" Margin="10,5,5,5"/>
-                        <xctk:DoubleUpDown Grid.Row="0" Grid.Column="1" x:Name="X1" Minimum="-200" Maximum="200" HorizontalAlignment="Left" Margin="5,5,5,5" Width="100" Value="-2"/>
-                        <Label Content="x2" Grid.Row="1" Grid.Column="0" Margin="10,5,5,5"/>
-                        <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" x:Name="X2" Minimum="-200" Maximum="200" HorizontalAlignment="Left" Margin="5,5,5,5" Width="100" Value="2"/>
-                    </Grid>
-                    <Grid  Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.Style>
-                            <Style TargetType="Grid" >
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="2"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="3"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="4"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="5"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="6"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger 
-                            Binding="{Binding ElementName=method, Path=SelectedIndex}" 
-                            Value="7"
-                            >
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                        <Label Content="y1" Grid.Row="0" Grid.Column="0" Margin="10,5,5,5"/>
-                        <xctk:DoubleUpDown Grid.Row="0" Grid.Column="1" x:Name="Y1" Minimum="-200" Maximum="200" HorizontalAlignment="Left" Margin="5,5,5,5" Width="100" Value="-2"/>
-                        <Label Content="y2" Grid.Row="1" Grid.Column="0" Margin="10,5,5,5"/>
-                        <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" x:Name="Y2" Minimum="-200" Maximum="200" HorizontalAlignment="Left" Margin="5,5,5,5" Width="100" Value="2"/>
-                    </Grid>
-                </Grid>
-            </GroupBox>
         </Grid>
     </Grid>
 </Window>

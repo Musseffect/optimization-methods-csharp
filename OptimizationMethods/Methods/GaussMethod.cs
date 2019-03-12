@@ -36,8 +36,9 @@ class GaussMethod : OptMethodND
             //оптимизация по каждой координате
             for (int j = 0; j < func.Dimensions; j++)
             {
-                Vector<double> xv = Vector<double>.Build.Dense(func.Dimensions, 0.0f);
+                Vector<double> xv = Vector<double>.Build.Dense(x);
                 Vector<double> dx = Vector<double>.Build.Dense(func.Dimensions, 0.0f);
+                xv[j] = 0.0f;
                 dx[j] = 1.0f;
                 MinPointND mp = method.getMinimum(minBound[j], maxBound[j], new Function1DNDAdapter(func, xv, dx));
                 x[j] = mp.x[0];
