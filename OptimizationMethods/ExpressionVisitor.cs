@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -179,7 +180,7 @@ namespace OptimizationMethods
         {
                 return new FloatNode
                 {
-                    Value = double.Parse(context.value.Text),
+                    Value = double.Parse(context.value.Text, CultureInfo.InvariantCulture),
                     Line = context.value.Line,
                     Position = context.value.Column
                 };

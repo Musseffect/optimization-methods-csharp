@@ -19,7 +19,7 @@ namespace OptimizationMethods.Compiler
             }
             catch (Exception exc)
             {
-                throw new Exception("");
+                throw new Exception(exc.Message);
             }
             return new ExpressionStack(rpn,indicies);
         }

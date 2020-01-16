@@ -87,22 +87,22 @@ namespace OptimizationMethods
             expLexer.RemoveErrorListeners();
             ErrorListener lexerListener = new ErrorListener();
             expLexer.AddErrorListener(lexerListener);
-            List<string> errors = lexerListener.getErrors();
-            if (errors.Count > 0)
-            {
-                throw new Exception("LexerError");
-            }
             CommonTokenStream commonTokenStream = new CommonTokenStream(expLexer);
             ExpGrammarParser expParser = new ExpGrammarParser(commonTokenStream);
             ParserErrorListener parserListener = new ParserErrorListener();
             expParser.RemoveErrorListeners();
             expParser.AddErrorListener(parserListener);
+            ExpGrammarParser.CompileUnitContext expContext = expParser.compileUnit();
+            List<string> errors = lexerListener.getErrors();
+            if (errors.Count > 0)
+            {
+                throw new Exception("Lexer Error");
+            }
             errors = parserListener.getErrors();
             if (errors.Count > 0)
             {
                 throw new Exception("Parser error");
             }
-            ExpGrammarParser.CompileUnitContext expContext = expParser.compileUnit();
             ExpressionVisitor visitor = new ExpressionVisitor();
             ASTNode root = visitor.VisitCompileUnit(expContext);
             var rootSimple = Compiler.ASTCompiler.validate(root);
@@ -231,6 +231,7 @@ namespace OptimizationMethods
             {
                 SymbolicFunction1D function = compileFunction1D(Expression.Text);
                 GoldenRuleSettings window = new GoldenRuleSettings(function);
+                window.Show();
             }
             catch (Exception exc)
             {
@@ -243,6 +244,7 @@ namespace OptimizationMethods
             {
                 SymbolicFunction1D function = compileFunction1D(Expression.Text);
                 PassiveSearchSettings window = new PassiveSearchSettings(function);
+                window.Show();
             }
             catch (Exception exc)
             {
