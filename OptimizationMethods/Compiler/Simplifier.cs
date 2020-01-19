@@ -217,7 +217,7 @@ namespace OptimizationMethods.Compiler
                 if (right.Type == ASTSimpleNode.EType.Float)
                 {
                     SimpleFloatNode nr = (SimpleFloatNode)right;
-                    return nl * nr;
+                    return nl / nr;
                 }
             }
             if (right.Type == ASTSimpleNode.EType.Float)
